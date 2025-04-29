@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const logger = require("morgan");
 const app = express();
 const mainRoute = require("./routes/index.js");
 const port = 5000;
@@ -15,6 +16,10 @@ const connect = async () => {
     throw error;
   }
 };
+
+// middilewares
+app.use(logger("dev"));
+app.use(express.json());
 
 app.use("/api", mainRoute);
 
