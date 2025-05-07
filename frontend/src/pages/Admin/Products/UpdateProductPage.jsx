@@ -1,12 +1,4 @@
-import {
-  Button,
-  /*Button,*/ Form,
-  Input,
-  InputNumber,
-  message,
-  Select,
-  Spin,
-} from "antd";
+import { Button, Form, Input, InputNumber, message, Select, Spin } from "antd";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";

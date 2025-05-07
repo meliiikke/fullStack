@@ -15,14 +15,30 @@ const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (cartItem) => {
-    /*setCartItems([...cartItems, cartItem]) 1. yol*/
-    setCartItems((prevCart) => [
-      ...prevCart,
-      {
-        ...cartItem,
-        quantity: cartItem.quantity ? cartItem.quantity : 1,
-      },
-    ]);
+    setCartItems((prevCart) => {
+      const existingIndex = prevCart.findIndex(
+        (item) => item._id === cartItem._id
+      );
+
+      if (existingIndex !== -1) {
+        // Ürün sepette zaten varsa quantity güncelle
+        const updatedCart = [...prevCart];
+        updatedCart[existingIndex] = {
+          ...updatedCart[existingIndex],
+          quantity: updatedCart[existingIndex].quantity + cartItem.quantity,
+        };
+        return updatedCart;
+      } else {
+        // Yeni ürün olarak ekle
+        return [
+          ...prevCart,
+          {
+            ...cartItem,
+            quantity: cartItem.quantity ? cartItem.quantity : 1,
+          },
+        ];
+      }
+    });
   };
 
   const removeFromCart = (itemId) => {

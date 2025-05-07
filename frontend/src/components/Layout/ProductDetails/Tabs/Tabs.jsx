@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Reviews from "../../Reviews/Reviews";
 import "./Tabs.css";
+import PropTypes from "prop-types";
 
-const Tabs = () => {
+const Tabs = ({ singleProduct, setSingleProduct }) => {
   const [activeTab, setActiveTab] = useState("desc");
   const handleTabClick = (e, tab) => {
     e.preventDefault();
@@ -46,23 +47,10 @@ const Tabs = () => {
           }`}
           id="desc"
         >
-          <p>
-            Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin
-            vitae magna in dui finibus malesuada et at nulla. Morbi elit ex,
-            viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum
-            iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales
-            nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc
-            tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt.
-            Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.
-            <br />
-            Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin
-            vitae magna in dui finibus malesuada et at nulla. Morbi elit ex,
-            viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum
-            iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales
-            nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc
-            tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt.
-            Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.
-          </p>
+          <div
+            className="product-desc"
+            dangerouslySetInnerHTML={{ __html: singleProduct.description }}
+          ></div>
         </div>
         <div
           className={`tab-panel-information content ${
@@ -85,7 +73,14 @@ const Tabs = () => {
               <tr>
                 <th>Size</th>
                 <td>
-                  <p>XXS, XS, S, M, L, XL, XXL</p>
+                  <p>
+                    {singleProduct.size.map((item, index) => (
+                      <span key={index}>
+                        {item.toUpperCase()}
+                        {index < singleProduct.size.length - 1 && " , "}
+                      </span>
+                    ))}
+                  </p>
                 </td>
               </tr>
             </tbody>
@@ -93,6 +88,8 @@ const Tabs = () => {
         </div>
         <Reviews
           active={activeTab === "reviews" ? " content active" : "content"}
+          singleProduct={singleProduct}
+          setSingleProduct={setSingleProduct}
         />
       </div>
     </div>
@@ -100,3 +97,8 @@ const Tabs = () => {
 };
 
 export default Tabs;
+
+Tabs.propTypes = {
+  singleProduct: PropTypes.object,
+  setSingleProduct: PropTypes.func,
+};

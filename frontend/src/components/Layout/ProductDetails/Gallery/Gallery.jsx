@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "./Gallery.css";
-import Slider from "react-slick";
-import productsData from "../../../../data.json";
 import PropTypes from "prop-types";
+import Slider from "react-slick";
+import "./Gallery.css";
+import { useEffect } from "react";
 
 function PrevBtn({ onClick }) {
   return (
@@ -42,11 +42,15 @@ PrevBtn.propTypes = {
   onClick: PropTypes.func,
 };
 
-const Gallery = () => {
+const Gallery = ({ singleProduct }) => {
   const [activeImg, setActiveImg] = useState({
-    img: productsData[0].img.singleImage,
+    img: "",
     imgIndex: 0,
   });
+
+  useEffect(() => {
+    setActiveImg({ img: singleProduct.img[0], imgIndex: 0 });
+  }, [singleProduct.img]);
 
   const sliderSettings = {
     dots: false,
@@ -60,36 +64,43 @@ const Gallery = () => {
   return (
     <div className="product-gallery">
       <div className="single-image-wrapper">
-        <img src={` /${activeImg.img}`} id="single-image" alt="" />
+        <img src={`${activeImg.img}`} id="single-image" alt="" />
       </div>
       <div className="product-thumb">
-        <ol className="gallery-thumbs glide__slides">
-          <Slider {...sliderSettings}>
-            {productsData[0].img.thumbs.map((itemImg, index) => (
-              <li
-                className="glide__slide glide__slide--active"
-                key={index}
-                onClick={() =>
-                  setActiveImg({
-                    img: productsData[0].img.thumbs[index],
-                    imgIndex: index,
-                  })
-                }
-              >
-                <img
-                  src={`/${itemImg}`}
-                  alt=""
-                  className={`img-fluid ${
-                    activeImg.imgIndex === index && "active"
-                  }`}
-                />
-              </li>
-            ))}
-          </Slider>
-        </ol>
+        <div className="glide__track" data-glide-el="track">
+          <ol className="gallery-thumbs glide__slides">
+            <Slider {...sliderSettings}>
+              {singleProduct.img.map((itemImg, index) => (
+                <li
+                  className="glide__slide glide__slide--active"
+                  key={index}
+                  onClick={() =>
+                    setActiveImg({
+                      img: itemImg,
+                      imgIndex: index,
+                    })
+                  }
+                >
+                  <img
+                    src={`${itemImg}`}
+                    alt=""
+                    className={`img-fluid ${
+                      activeImg.imgIndex === index ? "active" : ""
+                    } `}
+                  />
+                </li>
+              ))}
+            </Slider>
+          </ol>
+        </div>
+        <div className="glide__arrows" data-glide-el="controls"></div>
       </div>
     </div>
   );
 };
 
 export default Gallery;
+
+Gallery.propTypes = {
+  singleProduct: PropTypes.object,
+};
