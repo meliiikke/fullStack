@@ -25,8 +25,9 @@ const CartProvider = ({ children }) => {
         const updatedCart = [...prevCart];
         updatedCart[existingIndex] = {
           ...updatedCart[existingIndex],
-          quantity: updatedCart[existingIndex].quantity + cartItem.quantity,
+          quantity: cartItem.quantity,
         };
+
         return updatedCart;
       } else {
         // Yeni ürün olarak ekle
@@ -54,6 +55,7 @@ const CartProvider = ({ children }) => {
         cartItems,
         addToCart,
         removeFromCart,
+        setCartItems,
       }}
     >
       {children}
