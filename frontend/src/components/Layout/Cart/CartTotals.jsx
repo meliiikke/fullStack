@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { CartContext } from "../../../context/CartProvider";
 import { useState } from "react";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import { loadStripe } from "@stripe/stripe-js";
 
 const CartTotals = () => {
@@ -12,6 +12,7 @@ const CartTotals = () => {
     : null;
   const stripePublicKey = import.meta.env.VITE_API_STRIPE_PUBLIC_KEY;
   const apiURL = import.meta.env.VITE_API_BASE_URL;
+  const [loading, setLoading] = useState(false);
 
   const cartItemTotals = cartItems.map((item) => {
     const itemTotal = item.price * item.quantity;
@@ -30,6 +31,7 @@ const CartTotals = () => {
     : subTotals.toFixed(2);
 
   const handlePayment = async () => {
+    setLoading(true);
     if (!user) {
       return message.info("Ödeme yapabilmek için giriş yapmalısınız");
     }
@@ -61,6 +63,8 @@ const CartTotals = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,9 +109,11 @@ const CartTotals = () => {
         </tbody>
       </table>
       <div className="checkout">
-        <button className="btn btn-lg" onClick={handlePayment}>
-          Procced to checkout
-        </button>
+        <Spin spinning={loading}>
+          <button className="btn btn-lg" onClick={handlePayment}>
+            Procced to checkout
+          </button>
+        </Spin>
       </div>
     </div>
   );
